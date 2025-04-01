@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <!-- Console Appender -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [${ctx:traceId}] [%t] %-5level %c{1} - %msg%n"/>
+        </Console>
+
+        <!-- Kafka Appender -->
+        <Kafka name="KafkaAppender" topic="app-logs" syncSend="false">
+            <Property name="bootstrap.servers">localhost:9093</Property>
+            <Key>logstash</Key>
+            <Layout type="PatternLayout">
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} [${ctx:traceId}] [%t] %-5level %c{1} - %msg%n</Pattern>
+            </Layout>
+            <JsonLayout eventEol="true" compact="true" properties="true">
+                <!-- Add explicit timestamp field in ISO-8601 format -->
+                <KeyValuePair key="custom_timestamp" value="$${date:yyyy-MM-dd'T'HH:mm:ss.SSSZ}" />
+            </JsonLayout>
+        </Kafka>
+    </Appenders>
+
+    <Loggers>
+        <!-- Root Logger -->
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="KafkaAppender"/>
+        </Root>
+
+        <!-- Custom Logger for Your Application -->
+        <Logger name="com.example" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="KafkaAppender"/>
+        </Logger>
+    </Loggers>
+</Configuration>
