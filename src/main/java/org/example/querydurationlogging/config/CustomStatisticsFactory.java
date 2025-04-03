@@ -11,5 +11,4 @@ public class CustomStatisticsFactory implements StatisticsFactory {
     public StatisticsImplementor buildStatistics(@Autowired SessionFactoryImplementor sessionFactory) {
         return new CustomStatisticsImpl(sessionFactory);
     }
-
 }
