@@ -1,4 +1,4 @@
-package org.example.querydurationlogging;
+package org.example.querydurationlogging.config;
 
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.stat.spi.StatisticsFactory;

@@ -1,4 +1,4 @@
-package org.example.querydurationlogging;
+package org.example.querydurationlogging.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.ThreadContext;
