@@ -16,17 +16,17 @@ public class CustomStatisticsImpl extends StatisticsImpl {
     ) {
         super(sessionFactory);
     }
-
-    @Override
-    public void queryExecuted(
-            @UnknownKeyFor @NonNull @Initialized String hql,
-            @UnknownKeyFor @NonNull @Initialized int rows,
-            @UnknownKeyFor @NonNull @Initialized long time
-    ) {
-        //for read only query
-        ThreadContext.put("duration", Long.toString(time));
-        log.info("[CustomStatisticsImpl][queryExecuted] hql: {} rows: {}", hql, rows);
-        super.queryExecuted(hql, rows, time);
-        ThreadContext.remove("duration");
-    }
+//
+//    @Override
+//    public void queryExecuted(
+//            @UnknownKeyFor @NonNull @Initialized String hql,
+//            @UnknownKeyFor @NonNull @Initialized int rows,
+//            @UnknownKeyFor @NonNull @Initialized long time
+//    ) {
+//        //for read only query
+//        ThreadContext.put("duration", Long.toString(time));
+//        log.info("[CustomStatisticsImpl][queryExecuted] hql: {} rows: {}", hql, rows);
+//        super.queryExecuted(hql, rows, time);
+//        ThreadContext.remove("duration");
+//    }
 }

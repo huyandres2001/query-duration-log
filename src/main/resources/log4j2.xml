@@ -32,5 +32,10 @@
             <AppenderRef ref="Console"/>
             <AppenderRef ref="KafkaAppender"/>
         </Logger>
+        <!-- Custom Logger for Your Application -->
+        <Logger name="org.hibernate.orm.jdbc.bind" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="KafkaAppender"/>
+        </Logger>
     </Loggers>
 </Configuration>

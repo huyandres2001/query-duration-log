@@ -1,15 +1,16 @@
 package org.example.querydurationlogging.service;
 
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.java.Log;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.ThreadContext;
 import org.example.querydurationlogging.common.JsonUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+import static org.example.querydurationlogging.common.Constants.Logging.*;
 
 @Service
 @Log
@@ -18,16 +19,15 @@ public class LoggingServiceImpl implements LoggingService {
     @Override
     public void logRequest(HttpServletRequest httpServletRequest, Object body) {
         Map<String, String> parameters = buildParametersMap(httpServletRequest);
+        ThreadContext.put(HTTP_REQUEST_START_TIME, String.valueOf(System.currentTimeMillis()));
+        ThreadContext.put(TRACE_ID, StringUtils.defaultIfBlank(httpServletRequest.getHeader(TRACE_ID), UUID.randomUUID().toString()));
         String logMessage = """
                 REQUEST
                 Method: %s
                 Path: %s
                 Headers: %s%s%s""".formatted(
-                httpServletRequest.getMethod(),
-                httpServletRequest.getRequestURI(),
-                buildHeadersMap(httpServletRequest),
-                !parameters.isEmpty() ? "\nParameters: " + parameters : "",
-                body != null ? "\nBody: " + JsonUtils.toJson(body) : ""
+                httpServletRequest.getMethod(), httpServletRequest.getRequestURI(), buildHeadersMap(httpServletRequest),
+                !parameters.isEmpty() ? "\nParameters: " + parameters : "", body != null ? "\nBody: " + JsonUtils.toJson(body) : ""
         );
 
         log.info(logMessage);
@@ -35,19 +35,21 @@ public class LoggingServiceImpl implements LoggingService {
 
     @Override
     public void logResponse(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object body) {
+        String startTime = ThreadContext.get(HTTP_REQUEST_START_TIME);
+        Long elapsedTime = System.currentTimeMillis() - Long.parseLong(startTime);
+        ThreadContext.remove(HTTP_REQUEST_START_TIME);
+        ThreadContext.put(HTTP_REQUEST_DURATION, String.valueOf(elapsedTime));
         String logMessage = """
                 RESPONSE
                 Method: %s
                 Path: %s
                 Headers: %s
                 Body: %s""".formatted(
-                httpServletRequest.getMethod(),
-                httpServletRequest.getRequestURI(),
-                buildHeadersMap(httpServletResponse),
+                httpServletRequest.getMethod(), httpServletRequest.getRequestURI(), buildHeadersMap(httpServletResponse),
                 JsonUtils.toJson(body)
         );
-
         log.info(logMessage);
+        ThreadContext.remove(HTTP_REQUEST_DURATION);
     }
 
     private Map<String, String> buildParametersMap(HttpServletRequest httpServletRequest) {
@@ -65,10 +67,9 @@ public class LoggingServiceImpl implements LoggingService {
 
     private Map<String, String> buildHeadersMap(HttpServletRequest request) {
         Map<String, String> map = new HashMap<>();
-
-        Enumeration headerNames = request.getHeaderNames();
+        Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
-            String key = (String) headerNames.nextElement();
+            String key = headerNames.nextElement();
             String value = request.getHeader(key);
             map.put(key, value);
         }
