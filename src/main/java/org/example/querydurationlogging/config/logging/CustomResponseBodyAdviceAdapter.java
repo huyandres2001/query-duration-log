@@ -1,4 +1,4 @@
-package org.example.querydurationlogging.config;
+package org.example.querydurationlogging.config.logging;
 
 
 import org.example.querydurationlogging.service.LoggingService;

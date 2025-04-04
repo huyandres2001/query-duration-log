@@ -1,4 +1,4 @@
-package org.example.querydurationlogging;
+package org.example.querydurationlogging.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

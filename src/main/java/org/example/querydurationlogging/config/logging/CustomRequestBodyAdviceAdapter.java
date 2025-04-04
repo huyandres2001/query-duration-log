@@ -1,4 +1,4 @@
-package org.example.querydurationlogging.config;
+package org.example.querydurationlogging.config.logging;
 
 
 import java.lang.reflect.Type;

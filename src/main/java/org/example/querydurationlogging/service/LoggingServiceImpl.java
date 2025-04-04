@@ -21,6 +21,8 @@ public class LoggingServiceImpl implements LoggingService {
         Map<String, String> parameters = buildParametersMap(httpServletRequest);
         ThreadContext.put(HTTP_REQUEST_START_TIME, String.valueOf(System.currentTimeMillis()));
         ThreadContext.put(TRACE_ID, StringUtils.defaultIfBlank(httpServletRequest.getHeader(TRACE_ID), UUID.randomUUID().toString()));
+        ThreadContext.put(HTTP_METHOD, httpServletRequest.getMethod());
+        ThreadContext.put(HTTP_PATH, httpServletRequest.getRequestURI());
         String logMessage = """
                 REQUEST
                 Method: %s
@@ -36,8 +38,8 @@ public class LoggingServiceImpl implements LoggingService {
     @Override
     public void logResponse(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object body) {
         String startTime = ThreadContext.get(HTTP_REQUEST_START_TIME);
-        Long elapsedTime = System.currentTimeMillis() - Long.parseLong(startTime);
         ThreadContext.remove(HTTP_REQUEST_START_TIME);
+        Long elapsedTime = System.currentTimeMillis() - Long.parseLong(startTime);
         ThreadContext.put(HTTP_REQUEST_DURATION, String.valueOf(elapsedTime));
         String logMessage = """
                 RESPONSE
@@ -49,6 +51,8 @@ public class LoggingServiceImpl implements LoggingService {
                 JsonUtils.toJson(body)
         );
         log.info(logMessage);
+        ThreadContext.remove(HTTP_METHOD);
+        ThreadContext.remove(HTTP_PATH);
         ThreadContext.remove(HTTP_REQUEST_DURATION);
     }
 

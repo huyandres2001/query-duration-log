@@ -24,5 +24,9 @@ public class Constants {
         public static final String HTTP_REQUEST_START_TIME = "httpRequestStartTime";
 
         public static final String HTTP_REQUEST_DURATION = "httpRequestDuration";
+
+        public static final String HTTP_METHOD = "httpMethod";
+
+        public static final String HTTP_PATH = "httpPath";
     }
 }

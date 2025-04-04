@@ -1,9 +1,9 @@
-package org.example.querydurationlogging.config;
+package org.example.querydurationlogging.config.logging;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.ThreadContext;
 import org.hibernate.engine.jdbc.spi.SqlStatementLogger;
-import org.hibernate.internal.build.AllowSysOut;
 import org.hibernate.resource.jdbc.spi.JdbcSessionContext;
 import org.hibernate.stat.spi.StatisticsImplementor;
 
@@ -22,12 +22,16 @@ public class CustomSqlStatementLogger extends SqlStatementLogger {
         super(logToStdout, format, highlightSql, slowQueryThreshold);
     }
 
+    @SneakyThrows
     @Override
     public void logSlowQuery(String sql, long startTimeNanos, JdbcSessionContext context) {
+        Thread.sleep(10);//simulate query time, should be removed on production
         long queryExecutionMillis = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTimeNanos);
         ThreadContext.put(DURATION, String.valueOf(queryExecutionMillis));
-        logSlowQueryInternal( context, queryExecutionMillis, sql );
+        ThreadContext.put("sql", sql);
+        logSlowQueryInternal(context, queryExecutionMillis, sql);
         ThreadContext.remove(DURATION);
+        ThreadContext.remove("sql");
     }
 
     private void logSlowQueryInternal(final JdbcSessionContext context, final long queryExecutionMillis, final String sql) {

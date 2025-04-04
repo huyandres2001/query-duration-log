@@ -1,1 +1,1 @@
-org.example.querydurationlogging.config.CustomSqlStatementLoggerIntegrator
+org.example.querydurationlogging.config.logging.CustomSqlStatementLoggerIntegrator

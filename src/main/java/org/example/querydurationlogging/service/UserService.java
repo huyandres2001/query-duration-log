@@ -1,5 +1,7 @@
-package org.example.querydurationlogging;
+package org.example.querydurationlogging.service;
 
+import org.example.querydurationlogging.model.entity.User;
+import org.example.querydurationlogging.model.repo.UserRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
