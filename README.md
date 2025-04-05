@@ -25,3 +25,5 @@ Chạy thử API truy vấn user
 curl -X GET --location "http://localhost:8088/users" \
     -H "Content-Type: application/json"
 ```
+# Xem log
+Vào link sau để xem log: http://localhost:5601/app/discover#
