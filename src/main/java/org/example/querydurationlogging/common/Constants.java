@@ -28,5 +28,7 @@ public class Constants {
         public static final String HTTP_METHOD = "httpMethod";
 
         public static final String HTTP_PATH = "httpPath";
+
+        public static final String QUERY_METHOD = "queryMethod";
     }
 }

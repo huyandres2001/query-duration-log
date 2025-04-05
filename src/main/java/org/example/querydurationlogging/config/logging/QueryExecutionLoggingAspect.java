@@ -7,19 +7,20 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
 import static org.example.querydurationlogging.common.Constants.Logging.DURATION;
+import static org.example.querydurationlogging.common.Constants.Logging.QUERY_METHOD;
 
 @Aspect
 @Component
 @Slf4j
 public class QueryExecutionLoggingAspect {
 
-    private static final String QUERY_METHOD = "queryMethod";
-
+    //bọc các repository con của JpaRepository
     @Around("execution(* org.springframework.data.jpa.repository.JpaRepository+.*(..))")
     public Object logQueryExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
         Object result = joinPoint.proceed();
         long duration = System.currentTimeMillis() - startTime;
+        //ThreadContext sẽ gắn thêm thuộc tính cho log event
         ThreadContext.put(QUERY_METHOD, joinPoint.getSignature().toShortString());
         ThreadContext.put(DURATION, String.valueOf(duration));
         log.info("Query Method: {} executed in {} ms", joinPoint.getSignature().toShortString(), duration);

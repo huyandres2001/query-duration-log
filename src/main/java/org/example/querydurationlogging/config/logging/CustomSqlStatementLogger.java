@@ -14,14 +14,11 @@ import static org.example.querydurationlogging.common.Constants.Logging.DURATION
 @Slf4j
 public class CustomSqlStatementLogger extends SqlStatementLogger {
 
-    public CustomSqlStatementLogger(boolean logToStdout, boolean formatSql) {
-        super(logToStdout, formatSql);
-    }
-
     public CustomSqlStatementLogger(boolean logToStdout, boolean format, boolean highlightSql, int slowQueryThreshold) {
         super(logToStdout, format, highlightSql, slowQueryThreshold);
     }
 
+    //override this function so we do not have to check the slow query threshold, always log the sql
     @SneakyThrows
     @Override
     public void logSlowQuery(String sql, long startTimeNanos, JdbcSessionContext context) {
