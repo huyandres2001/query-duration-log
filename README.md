@@ -28,3 +28,7 @@ curl -X GET --location "http://localhost:8088/users" \
 # Xem log
 Vào link sau để xem log: http://localhost:5601/app/discover#
 ![img_1.png](img_1.png)
+
+# Phụ lục
+Linkedin của mình: https://www.linkedin.com/in/huyandres2001/
+Drawio kiến trúc hệ thống: [system-architecture](system-architecture)
